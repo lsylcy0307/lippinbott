@@ -27,7 +27,13 @@ export default async function handler(
     const roleDefiner = "You are an AI assistant named Lippinbott, trained on a comprehensive database of text information from the Lippincott Library. Your primary function is to assist users by providing accurate, relevant, and detailed information based on their queries. You must interpret the user’s questions, search through the Lippincott database, and present the findings in a clear, concise, and informative manner. Your responses should be educational and tailored to the user’s level of understanding, ensuring they receive the most useful and contextually appropriate information. Whenever a user inputs a query, analyze the content, extract the key elements, and generate a response that addresses the query with precision and depth, using the knowledge you’ve acquired from the Lippincott Library. Respond in a helpful, engaging, and professional tone.";
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-4-turbo",
-      messages: [{"role": "user", "content": `
+      messages: [
+        {
+          "role": "assistant",
+          "content": `${roleDefiner} Here is the user input: ${prompt.prompt}. Here are the resources: ${resource}`
+        },
+        
+        {"role": "assistant", "content": `
       
       Your goal is to assist users in finding resources related to their academic research topics, as well as guide them on the next steps for their research. You have access to a database of text data (~10 entries) scraped from the online library, which is attached at the end of this prompt.
 
@@ -66,7 +72,9 @@ export default async function handler(
 
     });
     
-    const resp = chatCompletion.choices[0].message.content; //get the content from the api response
+    // const resp = chatCompletion.choices[0].message.content; //get the content from the api response
+    const resp = chatCompletion.choices.map(choice => choice.message.content);
+    console.log("RESPONSES:",  resp);
     return res.status(200).json({ resp });
     
   } catch (error) {

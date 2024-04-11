@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 
-const ResourceCard = ({ title, description, link, recommendation }) => (
-  <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl my-4">
+type Resource = {
+  title: string;
+  description: string;
+  link: string;
+  recommendation: string;
+};
+
+const ResourceCard: React.FC<Resource> = ({ title, description, link, recommendation }) => (
+  <div className="w-full max-auto bg-white rounded-xl shadow-md overflow-hidden my-4">
     <div className="p-8">
       <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{title}</div>
       <p className="block mt-1 text-lg leading-tight font-medium text-black">{description}</p>
@@ -11,10 +18,10 @@ const ResourceCard = ({ title, description, link, recommendation }) => (
   </div>
 );
 
-
 const Chatbot: React.FC = () => {
   const [input, setInput] = useState('');
   const [response, setResponse] = useState('');
+  const [responseJson, setResponseJson] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSend = async () => {
@@ -34,7 +41,23 @@ const Chatbot: React.FC = () => {
       // Check if the request was successful
       if (res.ok) {
         const data = await res.json();
-        setResponse(data.resp); 
+
+        const firstResponse = data.resp[0];
+        const secondResponse = data.resp[1];
+
+        console.log(firstResponse);
+        console.log(secondResponse);
+
+        // const match = data.resp.match(/\[.*\]/s);
+        // const strippedResponse = match ? match[0] : 'No data found';
+
+        // setResponse(strippedResponse); 
+
+        // const responseJson = JSON.parse(strippedResponse);
+        // setResponseJson(responseJson);
+
+        // console.log(responseJson);
+
       } else {
         setResponse('Error generating response.');
       }
@@ -87,9 +110,17 @@ const Chatbot: React.FC = () => {
             }}></div>
           </div>
         ) : response && (
+          <div>
           <div className="border border-gray-300 rounded p-4 bg-white shadow-lg w-full">
             <p className="font-normal text-gray-700"><strong>Lippinbott:</strong> {response}</p>
           </div>
+          <h2 className="text-3xl mt-5 text-white font-bold">Additional Resources</h2>
+          <div className="flex flex-wrap justify-center items-center">
+          {(responseJson! as Resource[]).map((resource: Resource, index: number) => (
+            <ResourceCard key={index} {...resource} />
+          ))}
+        </div>
+        </div>
         )}
       </div>
     </div>
