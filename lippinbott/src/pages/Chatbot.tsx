@@ -5,16 +5,40 @@ const Chatbot: React.FC = () => {
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     setLoading(true);
     setInput('');
 
-    // Replace this with your chatbot's response generation logic
-    setTimeout(() => {
-      const chatbotResponse = `You said: ${input}`;
-      setResponse(chatbotResponse);
+    try {
+      // Make an API request to your backend endpoint with the user's input
+      const res = await fetch('/api/openai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: input }),
+      });
+
+      // Check if the request was successful
+      if (res.ok) {
+        const data = await res.json();
+        setResponse(data.resp); 
+      } else {
+        setResponse('Error generating response.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setResponse('Error generating response.');
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
+
+    // Replace this with your chatbot's response generation logic
+    // setTimeout(() => {
+    //   const chatbotResponse = `You said: ${input}`;
+    //   setResponse(chatbotResponse);
+    //   setLoading(false);
+    // }, 2000);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
