@@ -76,7 +76,7 @@ const Chatbot: React.FC = () => {
           </div>
         ) : response && (
           <div className="border border-gray-300 rounded p-4 bg-white shadow-lg w-full">
-            <p className="font-normal text-gray-700">{response}</p>
+            <p className="font-normal text-gray-700"><strong>Lippinbott:</strong> {response}</p>
           </div>
         )}
       </div>
