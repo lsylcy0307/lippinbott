@@ -20,11 +20,15 @@ Frontend: The frontend is a React component (Chatbot.tsx) that provides the user
 
 Data Resources: The backend API uses a list of data resources (data/resources.ts) as a source for relevant search results.
 
-# Examples
-Start by asking:
+# Start by asking
+Examples:
 - "I want to learn about entrepreneurship"
 - "Business in India"
 - "Give me resources related to consulting"
+
+
+
+
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
