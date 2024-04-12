@@ -8,33 +8,6 @@ type Resource = {
   next_queries: string;
 };
 
-const ResourceCard: React.FC<Resource> = ({ title, description, link, recommendation, next_queries }) => {
-  const queries = next_queries.split(/[\.,?]/).map(query => query.trim()).filter(query => query);
-  return (
-    <div className="w-full max-auto bg-white rounded-xl shadow-md overflow-hidden my-4">
-      <div className="p-8">
-        <div className="uppercase tracking-wide text-sm text-indigo-500 font-bold">{title}</div>
-        <p className="block text-lg leading-tight font-medium text-black">{description}</p>
-        <a href={link} target="_blank" rel="noopener noreferrer" className="block mt-4 text-lg leading-tight font-medium text-blue-500 hover:underline text-sm">Learn More</a>
-        <p className="mt-2 text-gray-500">{recommendation}</p>
-        {/* Render buttons for each query */}
-        <p className="mt-4 font-medium text-black text-sm"> Suggested: </p>
-        <div className="mt-2">
-          {queries.map((query, index) => (
-            <button
-              key={index}
-              className="mr-2 mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none text-sm"
-              onClick={() => console.log(query)}> 
-              {/* handleQueryClick */}
-              {query}
-          </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
 
 const Chatbot: React.FC = () => {
   const [input, setInput] = useState('');
@@ -42,9 +15,41 @@ const Chatbot: React.FC = () => {
   const [responseJson, setResponseJson] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const ResourceCard: React.FC<Resource> = ({ title, description, link, recommendation, next_queries }) => {
+    const queries = next_queries.split(/[\.,?]/).map(query => query.trim()).filter(query => query);
+    return (
+      <div className="w-full max-auto bg-white rounded-xl shadow-md overflow-hidden my-4">
+        <div className="p-8">
+          <div className="uppercase tracking-wide text-sm text-indigo-500 font-bold">{title}</div>
+          <p className="block text-lg leading-tight font-medium text-black">{description}</p>
+          <a href={link} target="_blank" rel="noopener noreferrer" className="block mt-4 text-lg leading-tight font-medium text-blue-500 hover:underline text-sm">Learn More</a>
+          <p className="mt-2 text-gray-500">{recommendation}</p>
+          {/* Render buttons for each query */}
+          <p className="mt-4 font-medium text-black text-sm"> Suggested: </p>
+          <div className="mt-2">
+            {queries.map((query, index) => (
+              <button
+                key={index}
+                className="mr-2 mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none text-sm"
+                // onClick={() => console.log(query)}
+                onClick={() => {
+                  setInput(query);
+                  handleQueryClick(query);
+                  handleSend();
+                }}
+                > 
+                {query}
+            </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const handleSend = async () => {
     setLoading(true);
-    setInput('');
+    // setInput('');
 
     try {
       // Make an API request to your backend endpoint with the user's input
