@@ -11,6 +11,7 @@ type Resource = {
 
 const Chatbot: React.FC = () => {
   const [input, setInput] = useState('');
+  const [userInput, setUserInput] = useState('');
   const [response, setResponse] = useState('');
   const [responseJson, setResponseJson] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -122,10 +123,11 @@ const Chatbot: React.FC = () => {
           </div>
         ) : responseJson && (
           <div>
-            {/* <div className="border border-gray-300 rounded p-4 bg-white shadow-lg w-full">
+            {/* <div className="border border-white-300 rounded p-4 bg-white shadow-lg w-full">
               <p className="font-normal text-gray-700"><strong>Lippinbott:</strong> {response}</p>
             </div> */}
-            <h2 className="text-3xl mt-5 text-white ">We found for you:</h2>
+            <h2 className="text-2xl mt-5 text-slate-300	">Your search: {userInput}</h2>
+            <h2 className="text-3xl mt-5 text-white	 ">We found for you:</h2>
             <div className="flex flex-wrap justify-center items-center">
               {(responseJson! as Resource[]).map((resource: Resource, index: number) => (
                 <ResourceCard key={index} {...resource} />
