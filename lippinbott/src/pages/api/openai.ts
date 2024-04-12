@@ -28,10 +28,10 @@ export default async function handler(
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-4-turbo",
       messages: [
-        {
-          "role": "assistant",
-          "content": `${roleDefiner} Here is the user input: ${prompt.prompt}. Here are the resources: ${resource}`
-        },
+        // {
+        //   "role": "assistant",
+        //   "content": `${roleDefiner} Here is the user input: ${prompt.prompt}. Here are the resources: ${resource}`
+        // },
         
         {"role": "assistant", "content": `
       
@@ -72,10 +72,19 @@ export default async function handler(
 
     });
     
-    // const resp = chatCompletion.choices[0].message.content; //get the content from the api response
-    const resp = chatCompletion.choices.map(choice => choice.message.content);
-    console.log("RESPONSES:",  resp);
-    return res.status(200).json({ resp });
+    const resp = chatCompletion.choices[0].message.content || ""; //get the content from the api response
+
+    const cleanResp = resp.replace(/```json|```/g, ''); // Remove any backticks and code block syntax
+
+    try {
+        // Parse the cleaned response
+        const jsonData = JSON.parse(cleanResp);
+
+        // Return the JSON data
+        return res.status(200).json({ resp: jsonData });
+    } catch (error) {
+        return res.status(500).json({ error: "Error parsing JSON" });
+    }
     
   } catch (error) {
     console.error("Error:", error);

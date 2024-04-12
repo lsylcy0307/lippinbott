@@ -5,18 +5,36 @@ type Resource = {
   description: string;
   link: string;
   recommendation: string;
+  next_queries: string;
 };
 
-const ResourceCard: React.FC<Resource> = ({ title, description, link, recommendation }) => (
-  <div className="w-full max-auto bg-white rounded-xl shadow-md overflow-hidden my-4">
-    <div className="p-8">
-      <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{title}</div>
-      <p className="block mt-1 text-lg leading-tight font-medium text-black">{description}</p>
-      <a href={link} target="_blank" rel="noopener noreferrer" className="block mt-1 text-lg leading-tight font-medium text-blue-500 hover:underline">Learn More</a>
-      <p className="mt-2 text-gray-500">{recommendation}</p>
+const ResourceCard: React.FC<Resource> = ({ title, description, link, recommendation, next_queries }) => {
+  const queries = next_queries.split(/[\.,?]/).map(query => query.trim()).filter(query => query);
+  return (
+    <div className="w-full max-auto bg-white rounded-xl shadow-md overflow-hidden my-4">
+      <div className="p-8">
+        <div className="uppercase tracking-wide text-sm text-indigo-500 font-bold">{title}</div>
+        <p className="block text-lg leading-tight font-medium text-black">{description}</p>
+        <a href={link} target="_blank" rel="noopener noreferrer" className="block mt-4 text-lg leading-tight font-medium text-blue-500 hover:underline text-sm">Learn More</a>
+        <p className="mt-2 text-gray-500">{recommendation}</p>
+        {/* Render buttons for each query */}
+        <p className="mt-4 font-medium text-black text-sm"> Suggested: </p>
+        <div className="mt-2">
+          {queries.map((query, index) => (
+            <button
+              key={index}
+              className="mr-2 mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none text-sm"
+              onClick={() => console.log(query)}> 
+              {/* handleQueryClick */}
+              {query}
+          </button>
+          ))}
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
 
 const Chatbot: React.FC = () => {
   const [input, setInput] = useState('');
@@ -41,23 +59,10 @@ const Chatbot: React.FC = () => {
       // Check if the request was successful
       if (res.ok) {
         const data = await res.json();
+        const response = data.resp;
+        console.log(response)
 
-        const firstResponse = data.resp[0];
-        const secondResponse = data.resp[1];
-
-        console.log(firstResponse);
-        console.log(secondResponse);
-
-        // const match = data.resp.match(/\[.*\]/s);
-        // const strippedResponse = match ? match[0] : 'No data found';
-
-        // setResponse(strippedResponse); 
-
-        // const responseJson = JSON.parse(strippedResponse);
-        // setResponseJson(responseJson);
-
-        // console.log(responseJson);
-
+        setResponseJson(response);
       } else {
         setResponse('Error generating response.');
       }
@@ -67,13 +72,6 @@ const Chatbot: React.FC = () => {
     } finally {
       setLoading(false);
     }
-
-    // Replace this with your chatbot's response generation logic
-    // setTimeout(() => {
-    //   const chatbotResponse = `You said: ${input}`;
-    //   setResponse(chatbotResponse);
-    //   setLoading(false);
-    // }, 2000);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +80,11 @@ const Chatbot: React.FC = () => {
       setResponse('');
     }
   };
+
+  function handleQueryClick(query: string) {
+    console.log('Query clicked:', query);
+    
+  }
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -94,7 +97,10 @@ const Chatbot: React.FC = () => {
         `}
       </style>
       <div className="flex mb-4">
-        <input className="flex-grow mr-2 border border-gray-300 rounded p-2" value={input} onChange={handleInputChange} />
+        <input className="flex-grow mr-2 border border-gray-300 rounded p-2 text-black" 
+          value={input} 
+          onChange={handleInputChange} 
+          placeholder="Help me find..." />
         <button className="bg-blue-500 hover:bg-blue-700 text-white rounded p-2" onClick={handleSend}>Send</button>
       </div>
       <div className="flex justify-center">
@@ -109,18 +115,18 @@ const Chatbot: React.FC = () => {
               animation: 'spin 2s linear infinite'
             }}></div>
           </div>
-        ) : response && (
+        ) : responseJson && (
           <div>
-          <div className="border border-gray-300 rounded p-4 bg-white shadow-lg w-full">
-            <p className="font-normal text-gray-700"><strong>Lippinbott:</strong> {response}</p>
+            {/* <div className="border border-gray-300 rounded p-4 bg-white shadow-lg w-full">
+              <p className="font-normal text-gray-700"><strong>Lippinbott:</strong> {response}</p>
+            </div> */}
+            <h2 className="text-3xl mt-5 text-white ">We found for you:</h2>
+            <div className="flex flex-wrap justify-center items-center">
+              {(responseJson! as Resource[]).map((resource: Resource, index: number) => (
+                <ResourceCard key={index} {...resource} />
+              ))}
+            </div>
           </div>
-          <h2 className="text-3xl mt-5 text-white font-bold">Additional Resources</h2>
-          <div className="flex flex-wrap justify-center items-center">
-          {(responseJson! as Resource[]).map((resource: Resource, index: number) => (
-            <ResourceCard key={index} {...resource} />
-          ))}
-        </div>
-        </div>
         )}
       </div>
     </div>
