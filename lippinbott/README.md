@@ -1,10 +1,10 @@
 # Lippincott Library Assistant Search Engine
 This project is the first AI powered search engine for the Wharton Lippincott Library. It was created for the Wharton AI Hackathon to help users efficiently find academic resources and research guidance using the OpenAI API.
 
-### Purpose
+## Purpose
 The Lippincott Library Assistant Search Engine is designed to assist users in finding relevant resources related to their academic research topics and to guide them on the next steps for their research. Leveraging OpenAI's API and additional web scraping, the assistant provides accurate, relevant, and detailed information based on the user's queries.
 
-### Features
+## Features
 Search and Recommendations: Users can enter a research query, and the assistant will provide relevant resources based on the query. Each resource includes a title, description, and link for further reading.
 
 Guidance and Suggestions: In addition to listing resources, the assistant offers recommendations for the user's research journey and suggests potential follow-up questions for further queries.
@@ -13,14 +13,14 @@ User-Friendly Interface: The search engine provides an intuitive and user-friend
 
 OpenAI Integration: The project integrates OpenAI's Chat API (gpt-4-turbo) to generate responses based on the user's query, offering a high-quality research experience.
 
-### Code Overview
+## Code Overview
 Backend: The backend consists of an API route (/api/openai) that handles incoming requests with the user's query. The route communicates with OpenAI's API to generate responses and parse the JSON data for frontend usage.
 
 Frontend: The frontend is a React component (Chatbot.tsx) that provides the user interface for the search engine. It allows users to input queries, display the AI-generated responses, and interact with the recommended resources.
 
 Data Resources: The backend API uses a list of data resources (data/resources.ts) as a source for relevant search results.
 
-### Start by asking
+## Start by asking
 Examples:
 - "I want to learn about entrepreneurship"
 - "Business in India"
