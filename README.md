@@ -26,6 +26,7 @@ Examples:
 - "Business in India"
 - "Give me resources related to consulting"
 
+<img width="1107" alt="Screenshot 2024-04-11 at 11 40 22 PM" src="https://github.com/lsylcy0307/lippinbott/assets/62744724/de609fc2-dcde-4d91-b616-05ce4f9bb216">
 
 
 
